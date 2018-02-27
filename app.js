@@ -3,6 +3,7 @@ let path = require('path');
 let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 let session = require('express-session');
+let cors = require('cors');
 let util = require('util');
 let passport = require('passport');
 let LocalStrategy = require('passport-local').Strategy;
@@ -33,6 +34,7 @@ app.use(function(req, res, next) {
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	next();
 });
+app.use(cors())
 
 //Bodyparser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
