@@ -11,7 +11,7 @@ router.get('/', (req, res) => {	//'ensureAuthenticated' in future
 		if(!blogs) next(new Error('No blogs found :('));
 		if (!error) {
 			res.send({
-				type: 'blogs_add',
+				type: 'blogs_get',
 				success: true,
 				blogs: blogs
 			})
@@ -40,16 +40,19 @@ router.get('/:id', (req, res, next) => {
 
 //Add new blog
 router.put('/', (req, res, next) => {
-	const blog = new Blog({name: req.body.name,
+	console.log(req.body);
+	const blog = new Blog({
+		title: req.body.title,
 		author: req.body.author,
 		date: (new Date().toISOString()),
 		message: req.body.message
 	});
 
-	blog.save().then(() => {
+	blog.save().then((item) => {
 		res.send({
 			type: 'blog_add',
 			success: true,
+			new_blog_id: item.id,
 			message: 'Blog has been added!'
 		});
 	});

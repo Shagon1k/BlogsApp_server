@@ -1,10 +1,10 @@
 let mongoose = require('mongoose');
 
 let BlogSchema = mongoose.Schema({
-	name: {
+	title: {
 		type: String,
 		unique: true,
-		required: [true, 'Need blog name']
+		required: [true, 'Need blog title']
 	},
 	author: {
 		type: String,

@@ -8,7 +8,7 @@ let passport = require('passport');
 let LocalStrategy = require('passport-local').Strategy;
 let mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/blogsapp');
+mongoose.connect('mongodb://localhost/blogsapp_db');
 
 //Application initizlize
 let app = express();
