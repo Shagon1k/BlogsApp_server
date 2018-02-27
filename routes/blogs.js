@@ -48,11 +48,11 @@ router.put('/', (req, res, next) => {
 		message: req.body.message
 	});
 
-	blog.save().then((item) => {
+	blog.save().then((blog) => {
 		res.send({
 			type: 'blog_add',
 			success: true,
-			new_blog_id: item.id,
+			blog,
 			message: 'Blog has been added!'
 		});
 	});
