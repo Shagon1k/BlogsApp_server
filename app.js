@@ -29,12 +29,12 @@ app.use((req, res, next) => {
 //---No public folder---
 
 //CORS Middleware
-app.use(function(req, res, next) {
-	res.header("Access-Control-Allow-Origin", "*");
-	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	next();
-});
-app.use(cors())
+const corsOptions = {
+	origin: 'http://localhost:8080',
+	credentials: true
+}
+
+app.use(cors(corsOptions));
 
 //Bodyparser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -43,9 +43,9 @@ app.use(cookieParser());
 
 //Express Session
 app.use(session({
-    secret: 'top-secret',
-    saveUninitialized: true,
-    resave: true
+	secret: 'top-secret',
+	saveUninitialized: true,
+	resave: true
 }));
 
 //Passport initizlise
@@ -95,5 +95,5 @@ app.use((error, req, res, next) => {
 
 //Start listen to application
 app.listen(1337, () => {
- 	console.log('Blogs app listening on port 1337!');
+	console.log('Blogs app listening on port 1337!');
 });

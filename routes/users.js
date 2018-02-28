@@ -6,17 +6,6 @@ let LocalStrategy = require('passport-local').Strategy;
 
 const User = require('../models/User');
 
-//---Not nessasary for now---
-//Register form
-//router.get('/register', (req, res) => {
-//	res.render('users/register');
-//});
-//
-////Login form
-//router.get('/login', (req, res) => {
-//	res.render('users/login');
-//});
-
 //Passport strategy
 passport.use(new LocalStrategy((username, password, done) => {
 	User.getUserByUsername(username, (error, user) => {
@@ -92,12 +81,22 @@ router.post('/register', (req, res, next) => {
 	});
 });
 
-////Login existing user
+//Login existing user
 router.post('/login', passport.authenticate('local'), function(req, res) {
-	res.send({
-		type: 'log_in',
-		success: true,
-		message: 'User logged in'
+	let username = req.body.username;
+	User.getUserByUsername(username, (error, user) => {
+		if (error) {
+			throw error;
+		}
+		res.send({
+			type: 'log_in',
+			success: true,
+			user: {
+				username: user.username,
+				email: user.email
+			},
+			message: 'User logged in'
+		})
 	})
 });
 
@@ -106,9 +105,8 @@ router.post('/logout', (req, res, next) => {
 	req.logout();
 	req.session.destroy((err) => {
 		if (err) {
-			next(new Error('User already exists'));
+			next(err);
 		}
-		
 		return res.send({
 			type: 'log_out',
 			success: true,

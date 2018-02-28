@@ -40,7 +40,6 @@ router.get('/:id', (req, res, next) => {
 
 //Add new blog
 router.put('/', (req, res, next) => {
-	console.log(req.body);
 	const blog = new Blog({
 		title: req.body.title,
 		author: req.body.author,
@@ -91,6 +90,7 @@ router.delete('/:id', (req, res, next) => {
 
 //Ensure whether user is logged in before response
 function ensureAuthenticated(req, res, next){
+	console.log(req);
 	if (req.isAuthenticated()) {
 		return next();
 	} else {
