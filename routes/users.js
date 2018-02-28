@@ -101,8 +101,20 @@ router.post('/login', passport.authenticate('local'), function(req, res) {
 	})
 });
 
-router.get('/logout', (req, res) => {
+router.post('/logout', (req, res, next) => {
+	
 	req.logout();
+	req.session.destroy((err) => {
+		if (err) {
+			next(new Error('User already exists'));
+		}
+		
+		return res.send({
+			type: 'log_out',
+			success: true,
+			message: 'User logged out'
+		});
+	});
 })
 
 

@@ -6,7 +6,7 @@ let mongoose = require('mongoose');
 const Blog = require('../models/Blog');
 
 //All blogs page
-router.get('/', (req, res) => {	//'ensureAuthenticated' in future
+router.get('/', ensureAuthenticated, (req, res) => {	//'ensureAuthenticated' in future
 	Blog.find({}, (error, blogs) => {
 		if(!blogs) next(new Error('No blogs found :('));
 		if (!error) {
