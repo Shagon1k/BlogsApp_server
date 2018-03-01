@@ -22,7 +22,7 @@ router.get('/', ensureAuthenticated, (req, res) => {	//'ensureAuthenticated' in 
 });
 
 //Particular blog page
-router.get('/:id', (req, res, next) => {
+router.get('/:id', ensureAuthenticated, (req, res, next) => {
 	const id = req.params.id;
 
 	Blog.findById(id, (error, blog) => {
@@ -39,7 +39,7 @@ router.get('/:id', (req, res, next) => {
 });
 
 //Add new blog
-router.put('/', (req, res, next) => {
+router.put('/', ensureAuthenticated, (req, res, next) => {
 	const blog = new Blog({
 		title: req.body.title,
 		author: req.body.author,
@@ -58,7 +58,7 @@ router.put('/', (req, res, next) => {
 });
 
 //Update existing blog's message
-router.post('/update', (req, res, next) => {
+router.post('/update', ensureAuthenticated, (req, res, next) => {
 	const id = req.body.id;
 	const message = req.body.message;
 
@@ -76,7 +76,7 @@ router.post('/update', (req, res, next) => {
 });
 
 //Delete existing blog
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', ensureAuthenticated, (req, res, next) => {
 	const id = req.params.id;
 
 	Blog.findById(id).remove(() => {
@@ -90,7 +90,7 @@ router.delete('/:id', (req, res, next) => {
 
 //Ensure whether user is logged in before response
 function ensureAuthenticated(req, res, next){
-	console.log(req);
+	console.log('authentication started');
 	if (req.isAuthenticated()) {
 		return next();
 	} else {
