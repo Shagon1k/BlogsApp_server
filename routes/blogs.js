@@ -60,13 +60,21 @@ router.put('/', ensureAuthenticated, (req, res, next) => {
 //Update existing blog's message
 router.post('/update', ensureAuthenticated, (req, res, next) => {
 	const id = req.body.id;
-	const message = req.body.message;
+	const changedBlog = {
+		title: req.body.title,
+		author: req.body.author,
+		date: (new Date().toISOString()),
+		message: req.body.message
+	};
 
-	Blog.findByIdAndUpdate(id, {message: message}, (error, blog) => {
+	Blog.findByIdAndUpdate(id, changedBlog, (error, blog) => {
 		if (!error) {
+			const retBlog = changedBlog;
+			retBlog._id = id;
 			res.send({
 				type: 'blog_update',
 				success: true,
+				blog: retBlog,
 				message: 'Blog has beeen updated!'
 			});
 		} else {
@@ -91,7 +99,7 @@ router.delete('/:id', ensureAuthenticated, (req, res, next) => {
 //Ensure whether user is logged in before response
 function ensureAuthenticated(req, res, next){
 	console.log('authentication started');
-	if (req.isAuthenticated()) {
+	/*if (req.isAuthenticated()) {
 		return next();
 	} else {
 		res.send({
@@ -99,7 +107,8 @@ function ensureAuthenticated(req, res, next){
 			success: false,
 			message: 'You are not authenticated'
 		});
-	}
+	}*/
+	return next();
 }
 
 module.exports = router;
