@@ -5,6 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "config": "^1.30.0",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
     "express": "^4.16.2",
@@ -16,10 +17,14 @@
     "winston": "^3.0.0-rc1"
   },
   "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-http": "^4.0.0",
+    "mocha": "^2.4.5",
     "nodemon": "^1.14.11"
   },
   "scripts": {
-    "app": "nodemon app"
+    "app": "nodemon app",
+    "test": "mocha __tests__/**/*.js --timeout 10000"
   },
   "repository": {
     "type": "git",

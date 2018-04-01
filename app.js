@@ -8,8 +8,9 @@ let util = require('util');
 let passport = require('passport');
 let LocalStrategy = require('passport-local').Strategy;
 let mongoose = require('mongoose');
+let config = require('config');
 
-mongoose.connect('mongodb://localhost/blogsapp_db');
+mongoose.connect(config.DBHost);
 
 //Application initizlize
 let app = express();
@@ -97,3 +98,5 @@ app.use((error, req, res, next) => {
 app.listen(1337, () => {
 	console.log('Blogs app listening on port 1337!');
 });
+
+module.exports = app;

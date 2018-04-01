@@ -6,7 +6,7 @@ let mongoose = require('mongoose');
 const Blog = require('../models/Blog');
 
 //All blogs page
-router.get('/', ensureAuthenticated, (req, res) => {	//'ensureAuthenticated' in future
+function getBlogs(req, res) {	//'ensureAuthenticated' in future
 	Blog.find({}, (error, blogs) => {
 		if(!blogs) next(new Error('No blogs found :('));
 		if (!error) {
@@ -19,10 +19,11 @@ router.get('/', ensureAuthenticated, (req, res) => {	//'ensureAuthenticated' in 
 			next(error);
 		}
 	});
-});
+}
+router.get('/', ensureAuthenticated, getBlogs);
 
 //Particular blog page
-router.get('/:id', ensureAuthenticated, (req, res, next) => {
+function getBlog(req, res, next) {
 	const id = req.params.id;
 
 	Blog.findById(id, (error, blog) => {
@@ -33,13 +34,14 @@ router.get('/:id', ensureAuthenticated, (req, res, next) => {
 				blog: blog
 			})
 		} else {
-			next(error);
+			res.send(error);
 		}
 	});
-});
+}
+router.get('/:id', ensureAuthenticated, getBlog);
 
 //Add new blog
-router.put('/', ensureAuthenticated, (req, res, next) => {
+function addBlog(req, res, next) {
 	const blog = new Blog({
 		title: req.body.title,
 		author: req.body.author,
@@ -47,18 +49,23 @@ router.put('/', ensureAuthenticated, (req, res, next) => {
 		message: req.body.message
 	});
 
-	blog.save().then((blog) => {
-		res.send({
-			type: 'blog_add',
-			success: true,
-			blog,
-			message: 'Blog has been added!'
-		});
+	blog.save((err, blog) => {
+		if(err) {
+			res.send(err);
+		} else {
+			res.send({
+				type: 'blog_add',
+				success: true,
+				blog,
+				message: 'Blog has been added!'
+			});
+		}
 	});
-});
+}
+router.put('/', ensureAuthenticated, addBlog);
 
 //Update existing blog's message
-router.post('/update', ensureAuthenticated, (req, res, next) => {
+function updateBlog(req, res, next) {
 	const id = req.body.id;
 	const changedBlog = {
 		title: req.body.title,
@@ -81,10 +88,11 @@ router.post('/update', ensureAuthenticated, (req, res, next) => {
 			next(error);
 		}
 	});
-});
+}
+router.post('/update', ensureAuthenticated, updateBlog);
 
 //Delete existing blog
-router.delete('/:id', ensureAuthenticated, (req, res, next) => {
+function deleteBlog(req, res, next) {
 	const id = req.params.id;
 
 	Blog.findById(id).remove(() => {
@@ -94,12 +102,16 @@ router.delete('/:id', ensureAuthenticated, (req, res, next) => {
 			message: 'Blog has beeen deleted!'
 		});
 	});
-});
+}
+router.delete('/:id', ensureAuthenticated, deleteBlog);
 
 //Ensure whether user is logged in before response
 function ensureAuthenticated(req, res, next){
 	console.log('authentication started');
-	/*if (req.isAuthenticated()) {
+	if (process.env.NODE_ENV === 'test') {
+		return next();
+	}
+	if (req.isAuthenticated()) {
 		return next();
 	} else {
 		res.send({
@@ -107,8 +119,7 @@ function ensureAuthenticated(req, res, next){
 			success: false,
 			message: 'You are not authenticated'
 		});
-	}*/
-	return next();
+	}
 }
 
 module.exports = router;
